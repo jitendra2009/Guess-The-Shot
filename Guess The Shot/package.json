@@ -1,0 +1,15 @@
+{
+  "name": "guess-the-shot",
+  "version": "1.0.0",
+  "description": "2-player browser strategy game — Guess the Shot",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["game", "multiplayer", "websocket"],
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Guess the Shot — a 2-player tactical duel. Shoot, reload, defend, or reflect. Outthink your opponent." />
+  <title>Guess the Shot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <div id="app" class="app">
+    <!-- MENU -->
+    <section data-screen="menu" class="screen active menu-screen">
+      <header class="title-block">
+        <p class="eyebrow">Tactical Duel</p>
+        <h1 class="game-title">Guess the <span class="accent">Shot</span></h1>
+        <p class="tagline">Four actions. One bullet. Zero mercy.</p>
+      </header>
+
+      <div class="menu-cards">
+        <div class="card local-card">
+          <h2>Local Match</h2>
+          <p>Pass the device — secret picks each round.</p>
+          <div class="name-inputs">
+            <input id="p1-name-input" type="text" placeholder="Player 1 name" maxlength="12" />
+            <input id="p2-name-input" type="text" placeholder="Player 2 name" maxlength="12" />
+          </div>
+          <button id="btn-local" class="btn btn-primary glow">Play Local</button>
+        </div>
+
+        <div class="card online-card">
+          <h2>Online Match</h2>
+          <p>Host a room or join with a code. Requires server.</p>
+          <input id="host-name-input" type="text" placeholder="Your name (host)" maxlength="12" />
+          <button id="btn-online-host" class="btn btn-secondary glow">Host Room</button>
+          <button id="btn-online-join" class="btn btn-ghost">Join Room</button>
+          <div id="join-panel" class="join-panel">
+            <input id="room-code-input" type="text" placeholder="Room code" maxlength="6" />
+            <input id="guest-name-input" type="text" placeholder="Your name" maxlength="12" />
+            <button id="btn-join-submit" class="btn btn-primary">Join</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="rules-hint">
+        <p>Shoot · Reload · Defence · Revert Bullet — max 6 rounds of mind games per magazine.</p>
+      </footer>
+    </section>
+
+    <!-- LOBBY -->
+    <section data-screen="lobby" class="screen lobby-screen">
+      <h2>Room Ready</h2>
+      <p class="lobby-label">Share this code:</p>
+      <div id="room-code-display" class="room-code">------</div>
+      <p id="online-status" class="online-status">Connecting…</p>
+      <button id="btn-back-menu" class="btn btn-ghost">Cancel</button>
+    </section>
+
+    <!-- GAME -->
+    <section data-screen="game" class="screen game-screen">
+      <header class="hud">
+        <div class="hud-round">
+          <span class="hud-label">Round</span>
+          <span id="round-num" class="hud-value">1</span>
+        </div>
+        <div id="status-text" class="hud-status">Select your action</div>
+        <button id="btn-game-menu" class="btn-icon" title="Menu" type="button">✕</button>
+      </header>
+
+      <div class="arena">
+        <article id="p1-panel" class="player-panel left">
+          <h3 id="p1-name">Player 1</h3>
+          <div class="stat">
+            <span class="stat-label">Bullets</span>
+            <div id="p1-bullets" class="bullet-row"></div>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Revert</span>
+            <span id="p1-revert" class="revert-badge ready">● READY</span>
+          </div>
+        </article>
+
+        <div class="arena-center">
+          <div id="fx-layer" class="fx-layer"></div>
+          <div id="waiting-banner" class="waiting-banner">
+            <div class="pulse-ring"></div>
+            <span class="waiting-text">Waiting for opponent…</span>
+          </div>
+        </div>
+
+        <article id="p2-panel" class="player-panel right">
+          <h3 id="p2-name">Player 2</h3>
+          <div class="stat">
+            <span class="stat-label">Bullets</span>
+            <div id="p2-bullets" class="bullet-row"></div>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Revert</span>
+            <span id="p2-revert" class="revert-badge ready">● READY</span>
+          </div>
+        </article>
+      </div>
+
+      <div id="local-pass-banner" class="local-pass-banner">
+        <span class="pass-text">Pass device to opponent</span>
+      </div>
+
+      <div class="selection-panel">
+        <p id="player-turn-label" class="turn-label">Your turn</p>
+        <p class="selected-label">Selected: <span id="selected-action">—</span></p>
+
+        <div class="action-grid">
+          <button class="action-btn glow" data-action="shoot" type="button">
+            <span class="action-icon">🎯</span>
+            <span class="action-name">Shoot</span>
+            <span class="action-desc">Fire 1 bullet</span>
+          </button>
+          <button class="action-btn glow" data-action="reload" type="button">
+            <span class="action-icon">🔄</span>
+            <span class="action-name">Reload</span>
+            <span class="action-desc">+1 bullet</span>
+          </button>
+          <button class="action-btn glow" data-action="defence" type="button">
+            <span class="action-icon">🛡️</span>
+            <span class="action-name">Defence</span>
+            <span class="action-desc">Block shot</span>
+          </button>
+          <button class="action-btn glow" data-action="revert" type="button">
+            <span class="action-icon">↩️</span>
+            <span class="action-name">Revert</span>
+            <span class="action-desc">Reflect bullet</span>
+          </button>
+        </div>
+
+        <button id="confirm-btn" class="btn btn-primary btn-confirm glow" type="button" disabled>
+          Lock In Choice
+        </button>
+      </div>
+
+      <aside class="history-panel">
+        <h4>Round Log</h4>
+        <ul id="history-log"></ul>
+      </aside>
+    </section>
+
+    <!-- REVEAL OVERLAY -->
+    <div id="reveal-overlay" class="reveal-overlay">
+      <div class="reveal-card">
+        <h3 class="reveal-title">Round Reveal</h3>
+        <div class="reveal-duel">
+          <div class="reveal-side">
+            <span class="reveal-player" id="reveal-p1-label">P1</span>
+            <div id="reveal-p1" class="reveal-action">???</div>
+          </div>
+          <div class="reveal-vs">VS</div>
+          <div class="reveal-side">
+            <span class="reveal-player" id="reveal-p2-label">P2</span>
+            <div id="reveal-p2" class="reveal-action">???</div>
+          </div>
+        </div>
+        <div id="reveal-messages" class="reveal-messages"></div>
+      </div>
+    </div>
+
+    <!-- WINNER -->
+    <div id="winner-screen" class="winner-screen">
+      <div class="winner-card">
+        <div class="winner-rays"></div>
+        <h2 id="winner-title">Player Wins!</h2>
+        <p id="winner-subtitle"></p>
+        <button id="restart-btn" class="btn btn-primary glow">Play Again</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <label class="sound-toggle-label">
+    <input type="checkbox" id="sound-toggle" checked />
+    Sound
+  </label>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
