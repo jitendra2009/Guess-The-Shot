@@ -360,3 +360,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const app = new GuessTheShotApp();
   app.init();
 });
+
+const ws = new WebSocket("https://guess-the-shot.onrender.com");
